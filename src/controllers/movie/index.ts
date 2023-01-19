@@ -1,10 +1,12 @@
-import { getRepository, RepositoryNotFoundError } from "typeorm"
+import { getRepository } from "typeorm"
 import { Movie } from "@models/entity/Movie"
 import { Userlogin } from "@models/entity/UserLogin"
 
 export const movies = async (request, response) => {
   try {
-    const movies = await getRepository(Movie).find({ order: { id: "ASC" } })
+    const movies = await getRepository(Movie).find({
+      select: ["id", "title", "releaseDate", "resume", "note"],
+    })
     return response.status(200).json(movies)
   } catch (error) {
     return response.status(500).json(error)
@@ -27,3 +29,4 @@ export const userLogin = async (request, response) => {
     return response.status(500).json(error)
   }
 }
+//"id", "title", "releaseDate", "resume" "note", "image"
