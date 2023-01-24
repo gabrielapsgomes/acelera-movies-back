@@ -45,11 +45,12 @@ export const postMovie = async (request, response) => {
       director,
       writer,
       studio,
+      actors,
       resume,
+      awards,
       note,
-    } = request.body
-    let actors = request.body.actors.split(" ")
-    let awards = request.body.awards.split(" ")
+    } = await request.body
+
     const salvarMovies = movieRepository.create({
       title,
       gender,
@@ -60,16 +61,31 @@ export const postMovie = async (request, response) => {
       director,
       writer,
       studio,
-      actors,
+      actors: actors.split(","),
       resume,
-      awards,
+      awards: awards.split(","),
       note,
     })
-    console.log(salvarMovies)
-    await movieRepository.save(salvarMovies)
+
+    movieRepository.save(salvarMovies)
 
     return response.status(200).json({ auth: true, message: "sucesso" })
   } catch (error) {
     return response.status(404).json({ auth: false, message: "falha" })
+  }
+}
+
+export const getMovieId = async (request, response) => {
+  try {
+    const idRepository = getRepository(Movie)
+    const id = request.params.id
+    const idMovie = await idRepository.findOne({ where: { id } })
+
+    if (idMovie) {
+      return response.status(200).json(idMovie)
+    }
+    return response.status(500).json({ message: "Falha ao encontrar Filme." })
+  } catch (error) {
+    return response.status(500).json({ message: "Falha ao encontrar Filme." })
   }
 }
