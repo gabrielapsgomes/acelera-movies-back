@@ -1,5 +1,12 @@
 import { getTODO, itsWorks } from "@controllers/todo"
-import { getMovieId, movies, postMovie, userLogin } from "@controllers/movie"
+import {
+  getDeleteId,
+  getMovieId,
+  movies,
+  postMovie,
+  putMovieId,
+  userLogin,
+} from "@controllers/movie"
 
 export const defineRoutes = (app) => {
   app.get("/", itsWorks)
@@ -8,4 +15,6 @@ export const defineRoutes = (app) => {
   app.get("/login", userLogin)
   app.post("/movie", postMovie)
   app.get("/movie/:id", getMovieId)
+  app.delete("/movie/:id", getDeleteId)
+  app.put("/movie/:id", putMovieId)
 }

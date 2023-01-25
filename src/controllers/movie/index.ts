@@ -89,3 +89,86 @@ export const getMovieId = async (request, response) => {
     return response.status(500).json({ message: "Falha ao encontrar Filme." })
   }
 }
+
+export const getDeleteId = async (request, response) => {
+  try {
+    const idRepository = getRepository(Movie)
+    const responseDelete = await idRepository.delete(request.params.id)
+
+    if (responseDelete.affected === 0) {
+      return response.status(404).json({ message: "Falha ao deletar Filme." })
+    }
+    return response.status(200).json({ message: "Filme deletado" })
+  } catch (error) {
+    return response.status(500).json(error)
+  }
+}
+
+export const putMovieId = async (request, response) => {
+  try {
+    const { id } = request.params
+    const {
+      title,
+      gender,
+      classification,
+      subtitle,
+      image,
+      releaseDate,
+      director,
+      writer,
+      studio,
+      actors,
+      resume,
+      awards,
+      note,
+    } = request.body
+
+    const idRepositoryPut = getRepository(Movie)
+    let movie = await idRepositoryPut.findOne({ where: { id } })
+    console.log(movie)
+    if (title) {
+      movie.title = title
+    }
+    if (gender) {
+      movie.gender = gender
+    }
+    if (classification) {
+      movie.classification = classification
+    }
+    if (subtitle) {
+      movie.subtitle = subtitle
+    }
+    if (image) {
+      movie.image = image
+    }
+    if (releaseDate) {
+      movie.releaseDate = releaseDate
+    }
+    if (director) {
+      movie.director = director
+    }
+    if (writer) {
+      movie.writer = writer
+    }
+    if (studio) {
+      movie.studio = studio
+    }
+    if (actors) {
+      movie.actors = actors.split(",")
+    }
+    if (resume) {
+      movie.resume = resume
+    }
+    if (awards) {
+      movie.awards = awards.split(",")
+    }
+    if (note) {
+      movie.note = note
+    }
+    await idRepositoryPut.save(movie)
+
+    return response.status(200).json({ messsage: "atualizado com sucesso" })
+  } catch (error) {
+    return response.status(500).json({ message: "não foi possivel atualizar" })
+  }
+}
