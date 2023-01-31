@@ -16,7 +16,7 @@ export class Movie {
   classification: String
 
   @Column({ name: "subtitle", type: "varchar" })
-  subtitle: number
+  subtitle: String
 
   @Column({ name: "image", type: "varchar" })
   image: String
