@@ -7,7 +7,7 @@ import { error } from "console"
 export const movies = async (request, response) => {
   try {
     const movies = await getRepository(Movie).find({
-      select: ["id", "title", "releaseDate", "resume", "note"],
+      select: ["id", "image", "title", "releaseDate", "resume", "note"],
     })
     return response.status(200).json(movies)
   } catch (error) {
@@ -21,7 +21,7 @@ export const userLogin = async (request, response) => {
     const userRepository = getRepository(Userlogin)
     const user = await userRepository.findOne({ where: { email } })
 
-    if (!user) {
+    if (!user || (user.email === email && user.password !== password)) {
       return response.status(404).json({ auth: false, message: "falha" })
     }
     if (user.email === email && user.password === password) {
