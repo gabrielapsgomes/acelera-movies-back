@@ -51,6 +51,26 @@ export const postMovie = async (request, response) => {
       note,
     } = await request.body
 
+    if (
+      !title ||
+      !gender ||
+      !classification ||
+      !subtitle ||
+      !image ||
+      !releaseDate ||
+      !director ||
+      !writer ||
+      !studio ||
+      !actors ||
+      !resume ||
+      !awards ||
+      !note
+    ) {
+      return response
+        .status(200)
+        .json({ auth: false, message: "Preencha todos os campos" })
+    }
+
     const salvarMovies = movieRepository.create({
       title,
       gender,
@@ -71,7 +91,7 @@ export const postMovie = async (request, response) => {
 
     return response.status(200).json({ auth: true, message: "sucesso" })
   } catch (error) {
-    return response.status(404).json({ auth: false, message: "falha" })
+    return response.status(500).json(error)
   }
 }
 
