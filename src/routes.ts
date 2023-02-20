@@ -7,6 +7,7 @@ import {
   putMovieId,
   userLogin,
 } from "@controllers/movie"
+import { createUser, getUsers } from "@controllers/users"
 
 export const defineRoutes = (app) => {
   app.get("/", itsWorks)
@@ -17,4 +18,6 @@ export const defineRoutes = (app) => {
   app.get("/movie/:id", getMovieId)
   app.delete("/movie/:id", getDeleteId)
   app.put("/movie/:id", putMovieId)
+  app.post("/users", createUser)
+  app.get("/users", getUsers)
 }

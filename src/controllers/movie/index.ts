@@ -1,8 +1,7 @@
 import { getRepository } from "typeorm"
 import { Movie } from "@models/entity/Movie"
 import { Userlogin } from "@models/entity/UserLogin"
-import { response } from "express"
-import { error } from "console"
+import md5 from "md5"
 
 export const movies = async (request, response) => {
   try {
@@ -17,14 +16,16 @@ export const movies = async (request, response) => {
 
 export const userLogin = async (request, response) => {
   try {
-    const { email, password } = request.body
+    const basicAuth = request.headers.authorization.split(" ")[1]
+    const encoded = Buffer.from(basicAuth, "base64")
+    const [email, password] = encoded.toString("utf-8").split(":")
     const userRepository = getRepository(Userlogin)
     const user = await userRepository.findOne({ where: { email } })
 
-    if (!user || (user.email === email && user.password !== password)) {
+    if (!user || (user.email === email && user.password !== md5(password))) {
       return response.status(404).json({ auth: false, message: "falha" })
     }
-    if (user.email === email && user.password === password) {
+    if (user.email === email && user.password === md5(password)) {
       return response.status(200).json({ auth: true, message: "sucesso" })
     }
   } catch (error) {
